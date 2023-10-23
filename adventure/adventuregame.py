@@ -4,37 +4,48 @@ import pexpect
 
 class AdventureGame:
     process: pexpect.spawn
+    poffset: int
 
     description: str
     history: io.StringIO
-    offset: int
+    hoffset: int
 
     def __enter__(self):
         self.description = self._get_description()
         self.history = io.StringIO()
-        self.offset = 0
+        self.poffset = 0
+        self.hoffset = 0
 
         self.process = pexpect.spawn('adventure', encoding='utf-8')
-        self.process.logfile = io.StringIO()
+        self.process.logfile_read = io.StringIO()
         self.process.expect('>')
         self._update_history()
 
         return self
-    
+
     def check(self) -> str:
         return f'{self.description}\n{self.history.getvalue()}'
+    
+    def read(self) -> str:
+        self.history.seek(self.hoffset)
+        h = self.history.read()
+        self.hoffset = self.history.tell()
+        if len(h) > 4 and h[-4:] == '\r\n> ': # make output more readable by excluding the next prompt
+            self.hoffset -= 2 # include next prompt in the next read, but not the newlines
+            return h[:-4]
+        return h
 
     def play(self, command: str) -> None:
         self.process.sendline(command)
-        self.process.expect('>')
+        self.process.expect('> ')
         self._update_history()
 
     def _update_history(self):
-        self.process.logfile.seek(self.offset)
-        t = self.process.logfile.read()
+        self.process.logfile_read.seek(self.poffset)
+        t = self.process.logfile_read.read()
         t = _escape_ansi(t)
         self.history.write(t)
-        self.offset = self.process.logfile.tell()
+        self.poffset = self.process.logfile_read.tell()
 
     def _get_description(self):
         p = pexpect.spawn('man adventure', encoding='utf-8')
