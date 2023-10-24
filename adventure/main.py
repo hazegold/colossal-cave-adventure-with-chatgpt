@@ -3,13 +3,15 @@ import time
 import adventuregame
 import chatgpt
 import chathistory
+import user
 
 # TODO - uses curses to manage the terminal display
 # TODO - debug issues with 3.5 failing to interact with the game 
 
 MAX_TURNS = 20
 PROMPT = """Input a command to continue playing the game.
-You should always attempt to input a valid command, even if previous commands failed."""
+The user may provide hints, that you should take into account when choosing your next command.
+Even if previous commands failed, continue trying to play the game."""
 
 def main():
     history = chathistory.ChatHistory()
@@ -25,6 +27,7 @@ def main():
             game.play(response)
             history.add_gameplay(game.read())
             print(history.read())
+            history.add_user_hint(user.ask_for_user_hint())  
 
             time.sleep(5)
 
