@@ -10,6 +10,8 @@ class AdventureGame:
     history: io.StringIO
     hoffset: int
 
+    disallowed: list[str]
+
     def __enter__(self):
         self.description = self._get_description()
         self.history = io.StringIO()
@@ -20,6 +22,8 @@ class AdventureGame:
         self.process.logfile_read = io.StringIO()
         self.process.expect('>')
         self._update_history()
+
+        self.disallowed = ["quit", "save"] # disallow commands that would exit gameplay
 
         return self
 
@@ -36,6 +40,8 @@ class AdventureGame:
         return h
 
     def play(self, command: str) -> None:
+        if command in self.disallowed:
+            return
         self.process.sendline(command)
         self.process.expect('> ')
         self._update_history()
