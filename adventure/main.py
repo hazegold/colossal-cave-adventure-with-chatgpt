@@ -14,6 +14,9 @@ The user may provide hints, that you should take into account when choosing your
 Even if previous commands failed, continue trying to play the game."""
 
 def main():
+    # chat = chatgpt.ChatGPT(debug=True)
+    chat = chatgpt.FakeChatGPT(responsefile="logs/chatgpt-2023-10-25-07-26-32-responseonly.log")
+
     history = chathistory.ChatHistory()
     history.add_system_prompt(PROMPT)
 
@@ -22,14 +25,12 @@ def main():
         print(history.read())
 
         for k in range(MAX_TURNS):
-            response = chatgpt.respond(history.get_messages())
+            response = chat.respond(history.get_messages())
             history.add_model_response(response)
             game.play(response)
             history.add_gameplay(game.read())
             print(history.read())
             history.add_user_hint(user.ask_for_user_hint())  
-
-            time.sleep(5)
 
 if __name__ == "__main__":
     main()
