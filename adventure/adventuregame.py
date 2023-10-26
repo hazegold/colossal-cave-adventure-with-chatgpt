@@ -20,7 +20,7 @@ class AdventureGame:
 
         self.process = pexpect.spawn('adventure', encoding='utf-8')
         self.process.logfile_read = io.StringIO()
-        self.process.expect('>')
+        self._expect_multiple('>')
         self._update_history()
 
         self.disallowed = ["quit", "save"] # disallow commands that would exit gameplay
@@ -43,7 +43,7 @@ class AdventureGame:
         if command in self.disallowed:
             return
         self.process.sendline(command)
-        self.process.expect('> ')
+        self._expect_multiple('> ')
         self._update_history()
 
     def _update_history(self):
@@ -63,6 +63,13 @@ class AdventureGame:
         p.sendline('q')
         p.close()
         return _escape_ansi(content)
+
+    def _expect_multiple(self, pattern: str):
+        try:
+            while True:
+                self.process.expect(pattern, timeout=0.1)
+        except pexpect.TIMEOUT:
+            pass
     
     def __exit__(self, exc_type, exc_value, traceback):
         self.process.sendline('quit')

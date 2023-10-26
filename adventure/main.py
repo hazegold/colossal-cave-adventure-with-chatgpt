@@ -14,8 +14,7 @@ The user may provide hints, that you should take into account when choosing your
 Even if previous commands failed, continue trying to play the game."""
 
 def main():
-    # chat = chatgpt.ChatGPT(debug=True)
-    chat = chatgpt.FakeChatGPT(responsefile="logs/chatgpt-2023-10-25-07-26-32-responseonly.log")
+    chat = chatgpt.ChatGPT(debug=True)
 
     history = chathistory.ChatHistory()
     history.add_system_prompt(PROMPT)
