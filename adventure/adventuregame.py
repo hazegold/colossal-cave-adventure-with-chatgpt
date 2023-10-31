@@ -43,6 +43,9 @@ class AdventureGame:
     def play(self, command: str) -> None:
         if command in self.disallowed:
             return
+        match = re.search(r'<command>(.*?)</command>', command)
+        if match:
+            command = match.group(1)
         self.process.sendline(command)
         self._update_history()
 

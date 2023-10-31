@@ -21,19 +21,14 @@ class ChatHistory():
         return [m._asdict() for m in self.messages]
 
     def add_user_hint(self, hint: str):
-        if hint != "":
-            s = "-" * 3 + "USER HINT START" + "-" * 3 
-            e = "-" * 3 + "USER HINT END" + "-" * 3
-            h = f"{s}\n{hint}\n{e}"
-            self.add_message("user", hint)
+        h = f"<hint>\n{hint}\n</hint>"
+        self.add_message("user", h)
 
     def add_model_response(self, response: str):
         self.add_message("assistant", response)
 
     def add_gameplay(self, gameplay: str):
-        s = "-" * 3 + "GAMEPLAY START" + "-" * 3 
-        e = "-" * 3 + "GAMEPLAY END" + "-" * 3
-        g = f"{s}\n{gameplay}\n{e}" # framing the gameplay seems to improve model response
+        g = f"<gameplay>{gameplay}</gameplay>"
         self.add_message("user", g)
         self.human_readable.write(gameplay) 
 

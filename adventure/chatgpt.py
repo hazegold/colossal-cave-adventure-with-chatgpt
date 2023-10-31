@@ -24,10 +24,12 @@ class ChatGPT:
         self.logfile_responseonly = f"logs/chatgpt-{datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')}-responseonly.log"
 
     @chatgptutils.ratelimited(interval=3)
+    @chatgptutils.retries(attempts=3)
     def respond(self, messages) -> str:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=messages,
+            request_timeout=15,
         )
         response_message = response["choices"][0]["message"]["content"]
         if self.debug:
