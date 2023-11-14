@@ -1,4 +1,4 @@
-
+import re
 import io
 import collections
 
@@ -26,6 +26,10 @@ class ChatHistory():
 
     def add_model_response(self, response: str):
         self.add_message("assistant", response)
+        match = re.search(r'<thinking>(.*?)</thinking>', response)
+        if match:
+            thinking = match.group(1)
+            self.human_readable.write(f"ChatGPT: {thinking}\n")
 
     def add_gameplay(self, gameplay: str):
         g = f"<gameplay>{gameplay}</gameplay>"
