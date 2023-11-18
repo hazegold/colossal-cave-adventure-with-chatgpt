@@ -27,7 +27,7 @@ class ChatGPT:
     @chatgptutils.retries(attempts=3)
     def respond(self, messages) -> str:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4",
             messages=messages,
             request_timeout=15,
         )

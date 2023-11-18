@@ -41,6 +41,7 @@ class AdventureGame:
         return h
 
     def play(self, command: str) -> None:
+        command = command.strip()
         if command in self.disallowed:
             return
         match = re.search(r'<command>(.*?)</command>', command)

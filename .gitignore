@@ -2,4 +2,5 @@ venv/
 *.pyc
 *.env
 *.log
+*.mp4
 logs/
