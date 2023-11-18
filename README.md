@@ -2,7 +2,7 @@
 
 ChatGPT plays through the OG text adventure game. You'll have the opportunity to give it hints when it gets stuck.
 
-![demo](demo.gif)
+<img src="demo.gif" width="960">
 
 ## Usage
 
